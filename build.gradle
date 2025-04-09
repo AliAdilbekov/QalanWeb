@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.12.0' // https://github.com/allure-framework/allure-gradle
+}
+allure {
+    report {
+        version.set("2.29.0") // Версия Allure Report (https://github.com/allure-framework/allure2)
+    }
+    adapter {
+        aspectjWeaver.set(true) // Обработка аннотации @Step
+        frameworks {
+            junit5 {
+                adapterVersion.set("2.29.0") // Версия Allure JUnit5 (https://github.com/allure-framework/allure-java)
+            }
+        }
+    }
+}
+repositories {
+    mavenCentral()
+}
+// Зависимости для проекта
+dependencies {
+    // Тестовые зависимости
+    testImplementation (
+            "com.codeborne:selenide:7.5.1", // Selenide для автоматизации браузера
+            "org.slf4j:slf4j-simple:2.0.6", // SLF4J Simple для логирования
+            "io.rest-assured:rest-assured:5.4.0", // Rest-Assured для тестирования REST API
+            "com.github.javafaker:javafaker:1.0.2", // Java Faker для генерации данных
+            "org.junit.jupiter:junit-jupiter:5.11.3", // Объединённый артефакт JUnit 5 упрощает подключение всего набора JUnit Jupiter.
+            "org.junit.jupiter:junit-jupiter-api:5.11.3", // Предоставляет аннотации (например, @Test, @BeforeEach) и основные классы для написания тестов
+            "org.junit.jupiter:junit-jupiter-engine:5.11.3", // Движок (рантайм) JUnit 5, который фактически запускает тесты и обрабатывает результаты.
+            "io.qameta.allure:allure-selenide:2.29.0" // Интеграция Allure Report с Selenide
+    )
+}
+// Настройка компиляции
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Устанавливаем кодировку UTF-8
+}
+// Настройка тестов
+test {
+    useJUnitPlatform() // Используем JUnit Platform для тестов
+}
