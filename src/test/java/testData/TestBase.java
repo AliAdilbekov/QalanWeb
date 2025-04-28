@@ -8,6 +8,7 @@ import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import pages.LoginPage;
+import pages.PersonalTaskPage;
 import pages.RegistrationPage;
 
 
@@ -15,6 +16,7 @@ public class TestBase {
     protected static final Faker faker = new Faker();
     protected LoginPage loginPage = new LoginPage();
     protected RegistrationPage registrationPage = new RegistrationPage();
+    protected PersonalTaskPage personalTaskPage = new PersonalTaskPage();
 
     @BeforeEach
     public void beforeEach() {
