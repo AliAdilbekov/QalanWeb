@@ -45,17 +45,17 @@ public class ChatPage {
         this.driver = driver;
 
         // Инициализация элементов через driver
-        modal                  = driver.$(By.id("add-survey-modal-body"));
-        signButton            = driver.$(By.id("sign-button"));
-        phoneInput            = modal.$(By.id("phone-input-id"));
-        passwordInput         = modal.$(By.id("password-input"));
-        submitButton          = driver.$(By.id("login-button"));
-        titleText             = driver.$(By.id("user-fullname-container"));
-        studentChatButton     = driver.$(By.id("mobile-chat-button"));
-        mentorSessionsButton  = driver.$(By.id("group-button-mentor-sessions"));
+        modal = driver.$(By.id("add-survey-modal-body"));
+        signButton = driver.$(By.id("sign-button"));
+        phoneInput = modal.$(By.id("phone-input-id"));
+        passwordInput = modal.$(By.id("password-input"));
+        submitButton = driver.$(By.id("login-button"));
+        titleText = driver.$(By.id("user-fullname-container"));
+        studentChatButton = driver.$(By.id("mobile-chat-button"));
+        mentorSessionsButton = driver.$(By.id("group-button-mentor-sessions"));
         mentorChatMessageListBtn = driver.$(By.id("chat-message-list-button"));
-        messageInput          = driver.$(By.id("message-input-box"));
-        refreshButton         = driver.$(By.id("load-message-history-button"));
+        messageInput = driver.$(By.id("message-input-box"));
+        refreshButton = driver.$(By.id("load-message-history-button"));
     }
 
     // --------------------------------------

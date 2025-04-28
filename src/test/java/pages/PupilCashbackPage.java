@@ -112,14 +112,13 @@ public class PupilCashbackPage {
 
 
     @Step("Проверяем успешную выплату")
-    public PupilCashbackPage verifySuccessScreen() {
+    public void verifySuccessScreen() {
         $("body").shouldHave(text("Принято в обработку")).shouldBe(visible, Duration.ofSeconds(15));
         $("body").shouldHave(text("ЗАГРУЗИТЬ PDF")).shouldBe(visible);
 
         sleep(10000); // повисеть на экране 10 секунд
 
         System.out.println("✅ Успешная выплата подтверждена");
-        return this;
     }
 }
 

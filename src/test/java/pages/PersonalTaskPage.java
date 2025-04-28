@@ -1,7 +1,6 @@
 package pages;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
@@ -29,8 +28,8 @@ public class PersonalTaskPage {
             congratulationsToast = $x("//div[contains(@class, 'Toastify__toast-body') and contains(.,'Құттықтаймыз')]");
 
     private final Random random = new Random(); // это для разной частоты ввода ответа
-    private final By dotsContainer  = By.id("task-modal-dot-list");
-    private final By livesContainer  = By.id("task-modal-task-attempts");
+    private final By dotsContainer = By.id("task-modal-dot-list");
+    private final By livesContainer = By.id("task-modal-task-attempts");
 
     @Step("Логинимся как ученик: {phone}")
     public PersonalTaskPage loginAsStudent(String phone, String password, String expectedUsername) {

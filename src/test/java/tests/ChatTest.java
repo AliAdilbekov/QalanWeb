@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 import pages.ChatPage;
 import testData.DriverFactory;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class ChatTest {
 
     // Два SelenideDriver из DriverFactory
     private static final SelenideDriver studentDriver = DriverFactory.createStudentDriver();
-    private static final SelenideDriver mentorDriver  = DriverFactory.createMentorDriver();
+    private static final SelenideDriver mentorDriver = DriverFactory.createMentorDriver();
 
     @Test
     void ChatFlowPersonalStudy2() {
