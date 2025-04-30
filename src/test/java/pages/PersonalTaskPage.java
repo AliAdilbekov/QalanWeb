@@ -23,13 +23,16 @@ public class PersonalTaskPage {
             answerContainer = $x("//span[contains(@class,'mq-editable-field')]"),
             checkAnswerButton = $(By.id("check-answer-button")),
             showSolutionButton = $(By.id("show-solution-button")),
+            hideCalculatorButton = $(By.id("calculator-icon")),
             videoExplanationButton = $(By.id("video-explanation-button")),
             dotList = $(By.id("task-modal-dot-list")),
             congratulationsToast = $x("//div[contains(@class, 'Toastify__toast-body') and contains(.,'Құттықтаймыз')]");
 
+    private Integer lastDotCount = null;
     private final Random random = new Random(); // это для разной частоты ввода ответа
     private final By dotsContainer = By.id("task-modal-dot-list");
-    private final By livesContainer = By.id("task-modal-task-attempts");
+    private final By livesContainer = By.cssSelector(".task-attempt-list");
+
 
     @Step("Логинимся как ученик: {phone}")
     public PersonalTaskPage loginAsStudent(String phone, String password, String expectedUsername) {
@@ -78,46 +81,60 @@ public class PersonalTaskPage {
         return this;
     }
 
+    @Step("Скрыть калькулятор")
+    public PersonalTaskPage hideCalculatorButtonClick() {
+        hideCalculatorButton.shouldBe(visible, Duration.ofSeconds(10)).click();
+        sleep(1500);
+        return this;
+    }
+
     @Step("Подсчет задач и вывод статистики")
     public PersonalTaskPage logTaskSummary() {
-        // все точки
-        ElementsCollection dots = dotList.$$(By.cssSelector(".dot"));
-        int total = dots.size();
-        // уже успешно решённые
-        int solved = dots.filterBy(cssClass("dot-success")).size();
-        // те, где были ошибки (жизнь потрачена)
-        int errors = dots.filterBy(cssClass("dot-error")).size();
-        // остаток — без решённых и без тех, где уже была ошибка
-        int remaining = total - solved - errors;
-
-        System.out.printf("[TASKS] Всего: %d; Решено: %d; Ошибок: %d; Осталось: %d%n",
-                total, solved, errors, remaining);
+        int total = dotList.$$(By.cssSelector(".dot")).size();
+        int solved = dotList.$$(By.cssSelector(".dot-success")).size();
+        int errors = dotList.$$(By.cssSelector(".dot-error")).size();
+        int shown = dotList.$$(By.cssSelector(".dot-show-solution")).size();
+        int remaining = total - solved - errors - shown;
+        System.out.printf("[TASKS] Всего: %d; Решено: %d; Ошибок: %d; Показов решения: %d; Осталось: %d%n",
+                total, solved, errors, shown, remaining);
+        lastDotCount = total;
         return this;
     }
 
     @Step("Проверяем кол-во потраченных жизней: {expected}")
     public PersonalTaskPage verifyLifeCount(int expected) {
-        ElementsCollection lives = $$(livesContainer).get(0)
-                .$$(By.cssSelector(".task-attempt-item"));
+        // 1) Находим контейнер жизней по классу
+        SelenideElement container = $(livesContainer).shouldBe(visible, Duration.ofSeconds(5));
+
+        // 2) Считаем все элементы .task-attempt-item внутри него
+        ElementsCollection lives = container.$$(".task-attempt-item");
+
+        // 3) Отфильтровываем те, у которых есть класс “error” (потраченные)
         int used = lives.filterBy(cssClass("error")).size();
+
         if (used != expected) {
             throw new AssertionError(
-                    String.format("❌ Ожидалось %d потраченных жизней, но найдено %d", expected, used));
+                    String.format("❌ Ожидалось %d потраченных жизней, но найдено %d", expected, used)
+            );
         }
         System.out.println("✅ Жизней потрачено: " + used);
         return this;
     }
 
-    @Step("Проверяем кол-во задач: {expected}")
-    public PersonalTaskPage verifyTaskCount(int expected) {
-        ElementsCollection dots = $$(dotsContainer).get(0)
-                .$$(By.cssSelector(".dot"));
-        int total = dots.size();
-        if (total != expected) {
-            throw new AssertionError(
-                    String.format("❌ Ожидалось %d точек, но их %d", expected, total));
+    @Step("Проверяем, что число точек выросло на: {expectedIncrease}")
+    public PersonalTaskPage verifyTaskCount(int expectedIncrease) {
+        if (lastDotCount == null) {
+            throw new IllegalStateException("Нужно вызвать logTaskSummary() перед verifyTaskCount()");
         }
-        System.out.println("✅ Точек всего: " + total);
+        int current = dotList.$$(By.cssSelector(".dot")).size();
+        int delta = current - lastDotCount;
+        if (delta != expectedIncrease) {
+            throw new AssertionError(String.format(
+                    "❌ Ожидался прирост точек на %d, но выросли на %d (было %d, стало %d)",
+                    expectedIncrease, delta, lastDotCount, current));
+        }
+        System.out.println("✅ Точек добавилось: " + delta + " (с " + lastDotCount + " до " + current + ")");
+        lastDotCount = current;
         return this;
     }
 
@@ -206,6 +223,7 @@ public class PersonalTaskPage {
         if (personalStudyContinueButton.isDisplayed()) {
             System.out.println("🔁 Продолжение обучения найдено. Завершаем старое обучение...");
             continueButtonClick();
+            hideCalculatorButtonClick();
             logTaskSummary();
             solveTasksUntilCongrats(userId);
             sleep(1000);
@@ -228,6 +246,7 @@ public class PersonalTaskPage {
             String wrong = String.valueOf(11 + random.nextInt(9));
             System.out.printf("[ERROR #%d] вместо \"%s\" ввели \"%s\"%n", i, correct, wrong);
 
+            clearAnswerField();
             enterValue(wrong);
             checkAnswerButton.shouldBe(enabled).click();
             sleep(1000);

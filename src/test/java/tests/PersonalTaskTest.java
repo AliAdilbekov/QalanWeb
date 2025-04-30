@@ -16,6 +16,7 @@ public class PersonalTaskTest extends TestBase {
         personalTaskPage.loginAsStudent("7083544313", "12345678", "Forautotest FORAUTOTEST")
                 .checkPersonalStudyFlow("1001")
                 .startButtonClick()
+                .hideCalculatorButtonClick()
                 .logTaskSummary()
                 .solveTasksUntilCongrats("1001");
     }
@@ -26,10 +27,11 @@ public class PersonalTaskTest extends TestBase {
         personalTaskPage.loginAsStudent("7083544313", "12345678", "Forautotest FORAUTOTEST")
                 .checkPersonalStudyFlow("1001")
                 .startButtonClick()
+                .hideCalculatorButtonClick()
                 .logTaskSummary()
-                .makeErrors(1, "1001") // пишем кол-во ошибок которое должны совершить и userID
-                .verifyLifeCount(1) // пишем сколько жизней должно быть потрачено
-                .verifyTaskCount(4) // здесь общее число задач которое должно быть
+                .makeErrors(1, "1001")  // пишем кол-во ошибок которое должны совершить и userID
+                .verifyLifeCount(1)         // пишем сколько жизней должно быть потрачено
+                .verifyTaskCount(1)   // здесь указываем число задач которое должно прибавиться, то есть проверяем дельту
                 .logTaskSummary()
                 .clearAnswerField()
                 .solveTasksUntilCongrats("1001");
@@ -41,10 +43,11 @@ public class PersonalTaskTest extends TestBase {
         personalTaskPage.loginAsStudent("7083544313", "12345678", "Forautotest FORAUTOTEST")
                 .checkPersonalStudyFlow("1001")
                 .startButtonClick()
+                .hideCalculatorButtonClick()
                 .logTaskSummary()
-                .makeErrors(3, "1001")
-                .verifyLifeCount(3)
-                .verifyTaskCount(6)
+                .makeErrors(3, "1001")  // пишем кол-во ошибок которое должны совершить и userID
+                .verifyLifeCount(3)         // пишем сколько жизней должно быть потрачено
+                .verifyTaskCount(3)   // здесь указываем число задач которое должно прибавиться, то есть проверяем дельту
                 .logTaskSummary()
                 .nextButtonClick()
                 .clearAnswerField()
@@ -58,11 +61,12 @@ public class PersonalTaskTest extends TestBase {
         personalTaskPage.loginAsStudent("7083544313", "12345678", "Forautotest FORAUTOTEST")
                 .checkPersonalStudyFlow("1001")
                 .startButtonClick()
+                .hideCalculatorButtonClick()
                 .logTaskSummary()
                 .showSolutionButtonClick()
+                .verifyLifeCount(1)        // пишем сколько жизней должно быть потрачено
                 .nextButtonClick()
-                .verifyLifeCount(1)
-                .verifyTaskCount(6)
+                .verifyTaskCount(3)  // здесь указываем число задач которое должно прибавиться, то есть проверяем дельту
                 .logTaskSummary()
                 .solveTasksUntilCongrats("1001");
     }
@@ -73,11 +77,12 @@ public class PersonalTaskTest extends TestBase {
         personalTaskPage.loginAsStudent("7083544313", "12345678", "Forautotest FORAUTOTEST")
                 .checkPersonalStudyFlow("1001")
                 .startButtonClick()
+                .hideCalculatorButtonClick()
                 .logTaskSummary()
                 .videoExplanationButtonClick()
                 .checkVideoPlayer()
-                .verifyLifeCount(1)
-                .verifyTaskCount(4)
+                .verifyLifeCount(1)        // пишем сколько жизней должно быть потрачено
+                .verifyTaskCount(1)  // здесь указываем число задач которое должно прибавиться, то есть проверяем дельту
                 .logTaskSummary()
                 .solveTasksUntilCongrats("1001");
     }
