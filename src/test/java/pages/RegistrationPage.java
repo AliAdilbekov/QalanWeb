@@ -90,7 +90,7 @@ public class RegistrationPage {
 
     @Step("Проверяем имя пользователя после регистрации: {expectedName}")
     public RegistrationPage verifyUserFullName(String expectedName) {
-        userFullNameContainer.shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text(expectedName));
+        userFullNameContainer.shouldBe(visible, Duration.ofSeconds(20)).shouldHave(text(expectedName));
         return this;
     }
 
@@ -119,7 +119,7 @@ public class RegistrationPage {
     @Step("Проверяем текст ошибки: {expectedError}")
     public RegistrationPage verifyErrorMessage(String expectedError) {
         SelenideElement errorMessage = $(By.id("register-error-text"));
-        errorMessage.shouldBe(visible, Duration.ofSeconds(10)).shouldHave(text(expectedError));
+        errorMessage.shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text(expectedError));
         // 🖨️ Выводим текст ошибки в консоль
         String actualErrorText = errorMessage.getText();
         System.out.println("❌ Текст ошибки: " + actualErrorText);

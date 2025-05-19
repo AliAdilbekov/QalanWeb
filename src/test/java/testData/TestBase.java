@@ -27,7 +27,7 @@ public class TestBase {
         Configuration.browser = "chrome";
         Configuration.browserSize = "1530x810";
         Configuration.timeout = 30000; // Ждать элементы до 30 сек
-        Configuration.pageLoadTimeout = 90000; // Ждать загрузку страницы минуту
+        Configuration.pageLoadTimeout = 90000; // Ждать загрузку страницы
         SelenideLogger.addListener("allure", new AllureSelenide());
 
         long end = System.currentTimeMillis();
