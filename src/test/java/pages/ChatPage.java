@@ -149,7 +149,9 @@ public class ChatPage {
 
     @Step("Нажимаем 'Обновить'")
     public ChatPage refreshChat() {
-        refreshButton.shouldBe(visible).click();
+        refreshButton.shouldBe(visible)
+                .shouldBe(enabled, Duration.ofSeconds(120))
+                .click();
         return this;
     }
 
