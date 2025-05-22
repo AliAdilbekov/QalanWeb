@@ -14,7 +14,7 @@ import static io.restassured.RestAssured.given;
 public class PupilCashbackPage {
 
     private final SelenideElement
-            cashbackChapter = $("#hideMobileItems"),
+            cashbackChapter = $("[id='hideMobileItems tab-cashback']"),
             getCashbackButton = $("#get-cashback-button"),
             kassa24Button = $("#cashback-type-button-default"),
             confirmationInput = $("#confirmation-code-input"),
@@ -22,8 +22,7 @@ public class PupilCashbackPage {
             cardInput = $x("/html/body/div/div/div/div/div/div[2]/div/form/div[1]/div[1]/div[1]/input"),
             payButton = $x("/html/body/div/div/div/div/div/div[2]/div/form/div[4]/button");
 
-    private static final String BEARER_TOKEN = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImV4cCI6MTc0NzIxOTcyNSwiaWF0IjoxNzQ0NjI3NzI1LCJpc3MiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImp0aSI6ImI3MGRiNGY4LTU5ODYtNDBiYS04NWI5LTNmZTNmMGUwMGI4NiIsIm5iZiI6MTc0NDYyNzcyNCwic3ViIjoiMTEzOCIsInR5cCI6ImFjY2VzcyIsInVzZXJfdG9rZW5fdHlwZSI6InB1cGlsIn0.rAANy6GH6NyuXP438axil1Dioip24mtf4QVC_zQXoA18aSpMizb0GCLw_oYuEM3hHvhdgsiody4db5nWLRETiA";
-
+    private static final String BEARER_TOKEN = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImV4cCI6MTc1MDQ5MDY0NiwiaWF0IjoxNzQ3ODk4NjQ2LCJpc3MiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImp0aSI6IjgwOWZkMjRiLTg3NDEtNGIzYS1iYmYxLTkyN2FkZDc5MjIwOSIsIm5iZiI6MTc0Nzg5ODY0NSwic3ViIjoiMjAwOTA3MyIsInR5cCI6ImFjY2VzcyIsInVzZXJfdG9rZW5fdHlwZSI6InB1cGlsIn0.MgQgBKU_VgB9qlDjj2p4tH-c22ew9S6gTxbhcdxwPEUxRx9tFIi3teRx4g5ALZNfCj68deuf9yXG7yo-r8m6hQ";
     @Step("Логинимся как ученик: {phone}")
     public PupilCashbackPage loginAsStudent(String phone, String password, String expectedUsername) {
         new LoginPage()
