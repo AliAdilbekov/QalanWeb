@@ -53,22 +53,31 @@ public class PupilCashbackPage {
         return this;
     }
 
-    @Step("Контроль Toast‑ошибок (error)")
+    @Step("Проверка появления toast-ошибок")
     public PupilCashbackPage verifyToastError() {
+        sleep(2000); // Ждём появления тоста
 
-        // Берём ТОЛЬКО error‑toast‑ы и сразу тело сообщения
-        ElementsCollection errors = $$("div.Toastify__toast.Toastify__toast--error > div.Toastify__toast-body")
-                .filter(visible);
+        ElementsCollection toasts = $$("div.Toastify__toast-body").filter(visible);
 
-        if (!errors.isEmpty()) {
-            String text = errors.first().getText();
-            System.out.println("[ERROR‑TOAST] " + text);
-            throw new AssertionError("На странице появился toast‑error: " + text);
-        } else {
-            System.out.println("[INFO] Ошибочных toast‑сообщений не найдено");
+        for (SelenideElement toast : toasts) {
+            String text = toast.getText();
+
+            if (text.contains("Растау коды табылмады")) {
+                System.out.println("❌ [TOAST ERROR] Неверный код подтверждения: " + text);
+                throw new AssertionError("Появился toast с ошибкой подтверждения кода: " + text);
+
+            } else if (text.contains("Сұраным кезінде қате болды")) {
+                System.out.println("❌ [TOAST ERROR] Дубликат платежа: " + text);
+                throw new AssertionError("Появился toast с ошибкой дубликата платежа: " + text);
+            }
         }
+
+        System.out.println("[INFO] Ошибочных toast-сообщений не найдено");
         return this;
     }
+
+
+
 
     @Step("Получаем и вводим SMS‑код")
     public PupilCashbackPage enterConfirmationCodeFromApi(String phoneNumber) {
@@ -119,10 +128,25 @@ public class PupilCashbackPage {
 
         System.out.println("✅ Успешная выплата подтверждена");
     }
+    @Step("Вводим код вручную: {code}")
+    public PupilCashbackPage enterCodeManually(String code) {
+        confirmationInput.shouldBe(visible, Duration.ofSeconds(10)).click();
+        confirmationInput.setValue(code);
+        submitConfirmationButton.shouldBe(visible).click();
+        sleep(2000);
+        return this;
+    }
+    @Step("Ожидаем, что появится toast с ошибкой: 'Растау коды табылмады'")
+    public PupilCashbackPage expectToastErrorMustAppear() {
+        sleep(2000); // подождать появления
+        SelenideElement errorToast = $x("//div[contains(@class,'Toastify__toast-body') and contains(.,'Растау коды табылмады')]");
+
+        if (errorToast.isDisplayed()) {
+            System.out.println("✅ Ожидаемый toast с ошибкой появился: " + errorToast.getText());
+        } else {
+            throw new AssertionError("❌ Ожидали тост с ошибкой, но он не появился");
+        }
+
+        return this;
+    }
 }
-
-
-
-
-
-
