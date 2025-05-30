@@ -72,7 +72,7 @@ public class PupilCashbackPage {
 
     @Step("Получаем и вводим SMS‑код")
     public PupilCashbackPage enterConfirmationCodeFromApi(String phoneNumber) {
-        sleep(15_000);
+        sleep(15000);
 
         String code =
                 given()
@@ -104,7 +104,7 @@ public class PupilCashbackPage {
 
     @Step("Вводим карту и нажимаем Выплатить")
     public PupilCashbackPage enterCardAndPay() {
-        cardInput.shouldBe(visible, Duration.ofSeconds(20)).setValue("");
+        cardInput.shouldBe(visible, Duration.ofSeconds(20)).setValue("5101177966966627");
         payButton.shouldBe(visible, Duration.ofSeconds(10)).click();
         return this;
     }
