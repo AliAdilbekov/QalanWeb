@@ -10,10 +10,31 @@ public class PupilCashbackTest extends TestBase {
         pupilCashbackPage.loginAsStudent("7058281556", "12345678", "Testcashback TESTCASHBACK")
                 .clickCashbackChapterButton()
                 .clickGetCashbackButton()
-                .clickKassa24Button() // подождёт появления поля
-                .enterConfirmationCodeFromApi("77022659587") // код подставит и нажмёт
+                .clickKassa24Button() 
+                .enterConfirmationCodeFromApi("77022659587")
                 .verifyToastError()
-                .enterCardAndPay() // карта + выплата
+                .enterCardAndPay() 
                 .verifySuccessScreen();
     }
+    @Test
+    void testShortCodeInput() {
+        pupilCashbackPage.loginAsStudent("7058281556", "12345678", "Testcashback TESTCASHBACK")
+                .clickCashbackChapterButton()
+                .clickGetCashbackButton()
+                .clickKassa24Button()
+                .enterCodeManually("123")                 // ← 3 цифры
+                .expectToastErrorMustAppear();            // PASSED если тост есть
+    }
+
+    @Test
+    void testInvalidFullCodeInput() {
+        pupilCashbackPage.loginAsStudent("7058281556", "12345678", "Testcashback TESTCASHBACK")
+                .clickCashbackChapterButton()
+                .clickGetCashbackButton()
+                .clickKassa24Button()
+                .enterCodeManually("9999")                // ← 4 неправильные цифры
+                .expectToastErrorMustAppear();            // PASSED если тост есть
+    }
+
+
 }
