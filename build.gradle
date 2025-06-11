@@ -29,7 +29,9 @@ dependencies {
             "org.junit.jupiter:junit-jupiter:5.11.3", // Объединённый артефакт JUnit 5 упрощает подключение всего набора JUnit Jupiter.
             "org.junit.jupiter:junit-jupiter-api:5.11.3", // Предоставляет аннотации (например, @Test, @BeforeEach) и основные классы для написания тестов
             "org.junit.jupiter:junit-jupiter-engine:5.11.3", // Движок (рантайм) JUnit 5, который фактически запускает тесты и обрабатывает результаты.
-            "io.qameta.allure:allure-selenide:2.29.0" // Интеграция Allure Report с Selenide
+            "io.qameta.allure:allure-selenide:2.29.0", // Интеграция Allure Report с Selenide
+            "io.rest-assured:rest-assured:5.4.0",
+            "org.json:json:20240303"
     )
 }
 // Настройка компиляции
