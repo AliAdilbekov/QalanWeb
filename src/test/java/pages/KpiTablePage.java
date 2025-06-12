@@ -1,37 +1,35 @@
 package pages;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.json.JSONObject;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import org.json.JSONObject;
-
 
 
 public class KpiTablePage {
 
     private final SelenideElement
-        serviceChapter = $x("/html/body/div[2]/div[1]/div/div/div/div[2]/nav/div[1]/div[4]"),
-        kpiButton = $("#tab-section-kpi"),
-        personalStudyKpi = $("#tab-kpi"),
-        companyInput = $("#select-company"),
-        dateInput = $("#date-picker"),
-        newPupils = $("#tab-new-pupils-kpi"),
-        kazLanguageRadio = $("#radio-kaz"),
-        loadButton = $("#load-btn"),
-        dateConfirmationBlock = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[4]/div[2]/div/div/div[2]/div[2]/div[1]/div[5]"),
-        notComplitedInRow = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/div[3]/div[1]/div[3]"),
-        tenFifteen = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[3]/button[1]"),
-        fifteenPlus = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[3]/button[2]"),
-        untPupilsKpi = $("#tab-ubt-kpi");
+            serviceChapter = $x("/html/body/div[2]/div[1]/div/div/div/div[2]/nav/div[1]/div[4]"),
+            kpiButton = $("#tab-section-kpi"),
+            personalStudyKpi = $("#tab-kpi"),
+            companyInput = $("#select-company"),
+            dateInput = $("#date-picker"),
+            newPupils = $("#tab-new-pupils-kpi"),
+            kazLanguageRadio = $("#radio-kaz"),
+            loadButton = $("#load-btn"),
+            dateConfirmationBlock = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[4]/div[2]/div/div/div[2]/div[2]/div[1]/div[5]"),
+            notComplitedInRow = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/div[3]/div[1]/div[3]"),
+            tenFifteen = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[3]/button[1]"),
+            fifteenPlus = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[3]/button[2]"),
+            untPupilsKpi = $("#tab-ubt-kpi");
 
 
     @Step("Логинимся как сервис-пользователь: {phone}")
@@ -197,23 +195,34 @@ public class KpiTablePage {
     // Хелпер для преобразования "04" → "April"
     private String getMonthName(String mm) {
         switch (mm) {
-            case "01": return "қаңтар";
-            case "02": return "ақпан";
-            case "03": return "наурыз";
-            case "04": return "сәуір";
-            case "05": return "мамыр";
-            case "06": return "маусым";
-            case "07": return "шілде";
-            case "08": return "тамыз";
-            case "09": return "қыркүйек";
-            case "10": return "қазан";
-            case "11": return "қараша";
-            case "12": return "желтоқсан";
-            default: throw new IllegalArgumentException("Месяц не распознан: " + mm);
+            case "01":
+                return "қаңтар";
+            case "02":
+                return "ақпан";
+            case "03":
+                return "наурыз";
+            case "04":
+                return "сәуір";
+            case "05":
+                return "мамыр";
+            case "06":
+                return "маусым";
+            case "07":
+                return "шілде";
+            case "08":
+                return "тамыз";
+            case "09":
+                return "қыркүйек";
+            case "10":
+                return "қазан";
+            case "11":
+                return "қараша";
+            case "12":
+                return "желтоқсан";
+            default:
+                throw new IllegalArgumentException("Месяц не распознан: " + mm);
         }
     }
-
-
 
 
     @Step("Проверяем KPI-данные с логом") // оставлю на будущее
@@ -286,7 +295,6 @@ public class KpiTablePage {
     }
 
 
-
     @Step("Вводим дату без проверки таблицы: {date}")
     public KpiTablePage enterDateForNewPupils(String date) {
         try {
@@ -304,7 +312,6 @@ public class KpiTablePage {
         }
         return this;
     }
-
 
 
     @Step("Проверяем данные в модуле 'Новые ученики'")
