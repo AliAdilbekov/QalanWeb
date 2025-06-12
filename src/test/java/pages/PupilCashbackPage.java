@@ -3,6 +3,7 @@ package pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import testData.TokenProvider;
 
 import java.time.Duration;
 
@@ -22,7 +23,6 @@ public class PupilCashbackPage {
             cardInput = $x("/html/body/div/div/div/div/div/div[2]/div/form/div[1]/div[1]/div[1]/input"),
             payButton = $x("/html/body/div/div/div/div/div/div[2]/div/form/div[4]/button");
 
-    private static final String BEARER_TOKEN = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImV4cCI6MTc1MDQ5MDY0NiwiaWF0IjoxNzQ3ODk4NjQ2LCJpc3MiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImp0aSI6IjgwOWZkMjRiLTg3NDEtNGIzYS1iYmYxLTkyN2FkZDc5MjIwOSIsIm5iZiI6MTc0Nzg5ODY0NSwic3ViIjoiMjAwOTA3MyIsInR5cCI6ImFjY2VzcyIsInVzZXJfdG9rZW5fdHlwZSI6InB1cGlsIn0.MgQgBKU_VgB9qlDjj2p4tH-c22ew9S6gTxbhcdxwPEUxRx9tFIi3teRx4g5ALZNfCj68deuf9yXG7yo-r8m6hQ";
     @Step("Логинимся как ученик: {phone}")
     public PupilCashbackPage loginAsStudent(String phone, String password, String expectedUsername) {
         new LoginPage()
@@ -81,7 +81,7 @@ public class PupilCashbackPage {
 
     @Step("Получаем и вводим SMS‑код")
     public PupilCashbackPage enterConfirmationCodeFromApi(String phoneNumber) {
-        sleep(15000);
+        sleep(15_000);
 
         String code =
                 given()
@@ -90,7 +90,7 @@ public class PupilCashbackPage {
                         .relaxedHTTPSValidation()                         // если сертификат self‑signed
                         .queryParam("phoneNumber", phoneNumber)
                         .queryParam("type", 30)
-                        .header("Authorization", "Bearer " + BEARER_TOKEN)
+                        .header("Authorization", "Bearer " + TokenProvider.getBearerToken())
                         .when()
                         .get()
                         .then()
@@ -113,7 +113,7 @@ public class PupilCashbackPage {
 
     @Step("Вводим карту и нажимаем Выплатить")
     public PupilCashbackPage enterCardAndPay() {
-        cardInput.shouldBe(visible, Duration.ofSeconds(20)).setValue("5101177966966627");
+        cardInput.shouldBe(visible, Duration.ofSeconds(20)).setValue("");
         payButton.shouldBe(visible, Duration.ofSeconds(10)).click();
         return this;
     }
@@ -137,7 +137,7 @@ public class PupilCashbackPage {
         return this;
     }
     @Step("Ожидаем, что появится toast с ошибкой: 'Растау коды табылмады'")
-    public void expectToastErrorMustAppear() {
+    public PupilCashbackPage expectToastErrorMustAppear() {
         sleep(2000); // подождать появления
         SelenideElement errorToast = $x("//div[contains(@class,'Toastify__toast-body') and contains(.,'Растау коды табылмады')]");
 
@@ -147,5 +147,6 @@ public class PupilCashbackPage {
             throw new AssertionError("❌ Ожидали тост с ошибкой, но он не появился");
         }
 
+        return this;
     }
 }
