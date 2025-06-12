@@ -137,7 +137,7 @@ public class PupilCashbackPage {
         return this;
     }
     @Step("Ожидаем, что появится toast с ошибкой: 'Растау коды табылмады'")
-    public PupilCashbackPage expectToastErrorMustAppear() {
+    public void expectToastErrorMustAppear() {
         sleep(2000); // подождать появления
         SelenideElement errorToast = $x("//div[contains(@class,'Toastify__toast-body') and contains(.,'Растау коды табылмады')]");
 
@@ -147,6 +147,5 @@ public class PupilCashbackPage {
             throw new AssertionError("❌ Ожидали тост с ошибкой, но он не появился");
         }
 
-        return this;
     }
 }

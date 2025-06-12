@@ -63,7 +63,8 @@ public class KpiTest extends TestBase {
                 );
     }
 
-    @Test void testConsecutiveUnexecuted15PlusDays() {
+    @Test
+    void testConsecutiveUnexecuted15PlusDays() {
         new KpiTablePage()
                 .loginAsService("7000000000", "12345678", "test sbb")
                 .clickServiceChapter()
@@ -83,8 +84,4 @@ public class KpiTest extends TestBase {
     }
 
 
-
-
-
 }
-
