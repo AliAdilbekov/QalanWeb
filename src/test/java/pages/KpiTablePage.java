@@ -13,7 +13,6 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
-=======
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -25,7 +24,7 @@ public class KpiTablePage {
 
     private final SelenideElement
 
-=======
+
             serviceChapter = $x("//span[text()='Сервис']"),
             kpiButton = $("#tab-section-kpi"),
             personalStudyKpi = $("#tab-kpi"),
@@ -37,7 +36,7 @@ public class KpiTablePage {
 
             notComplitedInRow = $("#tab-consecutive-unexecuted-kpi-label"),
             tenFifteen = $("#btn-10-15-days"),
-            fifteenPlus = $("#btn-15-plus-days"),
+            fifteenPlus = $("#btn-15-plus-days");
 
 
 
