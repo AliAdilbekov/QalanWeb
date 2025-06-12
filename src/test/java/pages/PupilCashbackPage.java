@@ -113,7 +113,7 @@ public class PupilCashbackPage {
 
     @Step("Вводим карту и нажимаем Выплатить")
     public PupilCashbackPage enterCardAndPay() {
-        cardInput.shouldBe(visible, Duration.ofSeconds(20)).setValue("");
+        cardInput.shouldBe(visible, Duration.ofSeconds(20)).setValue("4834701358210372");
         payButton.shouldBe(visible, Duration.ofSeconds(10)).click();
         return this;
     }
