@@ -40,10 +40,48 @@ public class KpiTest extends TestBase {
                 .clickKpiButton()
                 .clickUntPupilsKpi()
                 .selectKazLanguage()
-                .enterDateForUnt("01.04.2024")
+                .enterDate("01.04.2024", "ЕНТ")
                 .clickLoadButton()
                 .verifyUntPupilsData();
     }
+
+    @Test
+    void testConsecutiveUnexecuted10to15Days() {
+        new KpiTablePage()
+                .loginAsService("7000000000", "12345678", "test sbb")
+                .clickServiceChapter()
+                .clickKpiButton()
+                .clickNotCompletedInRow()
+                .selectKazakhLanguage()
+                .enterDate("14.04.2024", "Подряд не выпол.10-15")
+                .clickTenFifteenDays()
+                .verifyConsecutiveUnexecutedData(
+                        1,      // expectedExecuted
+                        20,     // expectedUnexecuted
+                        "5%",   // expectedPercent
+                        21      // expectedTotal
+                );
+    }
+
+    @Test void testConsecutiveUnexecuted15PlusDays() {
+        new KpiTablePage()
+                .loginAsService("7000000000", "12345678", "test sbb")
+                .clickServiceChapter()
+                .clickKpiButton()
+                .clickNotCompletedInRow()
+                .selectKazakhLanguage()
+                .enterDate("17.04.2024", "Подряд не выпол.15+")
+                .clickTenFifteenPlusDays()
+                .verifyConsecutiveUnexecutedData15Plus(
+                        0,      // expectedExecuted
+                        15,     // expectedUnexecuted
+                        "0%",   // expectedPercent
+                        15      // expectedTotal
+                );
+
+
+    }
+
 
 
 

@@ -13,11 +13,20 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
+=======
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.json.JSONObject;
+
+
 
 public class KpiTablePage {
 
     private final SelenideElement
-            serviceChapter = $x("/html/body/div[2]/div[1]/div/div/div/div[2]/nav/div[1]/div[4]"),
+
+=======
+            serviceChapter = $x("//span[text()='Сервис']"),
             kpiButton = $("#tab-section-kpi"),
             personalStudyKpi = $("#tab-kpi"),
             companyInput = $("#select-company"),
@@ -25,11 +34,11 @@ public class KpiTablePage {
             newPupils = $("#tab-new-pupils-kpi"),
             kazLanguageRadio = $("#radio-kaz"),
             loadButton = $("#load-btn"),
-            dateConfirmationBlock = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[4]/div[2]/div/div/div[2]/div[2]/div[1]/div[5]"),
-            notComplitedInRow = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/div[3]/div[1]/div[3]"),
-            tenFifteen = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[3]/button[1]"),
-            fifteenPlus = $x("/html/body/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/main/main/div[3]/button[2]"),
-            untPupilsKpi = $("#tab-ubt-kpi");
+
+            notComplitedInRow = $("#tab-consecutive-unexecuted-kpi-label"),
+            tenFifteen = $("#btn-10-15-days"),
+            fifteenPlus = $("#btn-15-plus-days"),
+
 
 
     @Step("Логинимся как сервис-пользователь: {phone}")
@@ -50,21 +59,25 @@ public class KpiTablePage {
         return parts[2] + "-" + parts[1] + "-" + parts[0];
     }
 
+    private static final String BEARER_TOKEN = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImV4cCI6MTc0OTcxMzUyMiwiaWF0IjoxNzQ5NjI3MTIyLCJpc3MiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImp0aSI6IjE2MWI1YWZlLTA2NTAtNDYyZC1iODdlLWQ2MDk1NGI4OWFiMCIsIm5iZiI6MTc0OTYyNzEyMSwic3ViIjoiMjAwOTY2MiIsInR5cCI6ImFjY2VzcyIsInVzZXJfdG9rZW5fdHlwZSI6InB1cGlsIn0.D4ylNn6c0xBDK7m8d9Pu1BLEM6XmVM-pGVpRfJjeMviPp3fsiOOQvkNRGwc_ncEUzQ_i9gis3YoAPos3QZa-XQ";
 
+    @Step("Сравниваем KPI с API: дата={date}, компания={company}")
     public KpiTablePage verifyKpiMatchesApi(String date, String company) {
         String apiDate = convertToApiDateFormat(date);
 
-
         Response response = RestAssured
                 .given()
-                .header("Authorization", "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImV4cCI6MTc0OTYyNjk4MywiaWF0IjoxNzQ5NTQwNTgzLCJpc3MiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImp0aSI6ImYxYTFjMmNjLWM5MzctNDE4Ni05MzVkLWVjMDk3MTIxZDQ1OSIsIm5iZiI6MTc0OTU0MDU4Miwic3ViIjoiMjAwOTY2MiIsInR5cCI6ImFjY2VzcyIsInVzZXJfdG9rZW5fdHlwZSI6InB1cGlsIn0.CY9eQg6j1n-_P6AqRMyW_X6WrnzHipROATw2UB3xq0ZBhV3lY6cZ4X7BxDhH7fxE2J4mmXOBra76hA89qand-g")
+                .header("Authorization", "Bearer " + BEARER_TOKEN)
                 .queryParam("date", apiDate)
                 .queryParam("company", company)
                 .when()
-                .get("https://test.qalan.kz/api/personalStudy/kpi")
-                .then()
-                .statusCode(200)
-                .extract().response();
+                .get("https://test.qalan.kz/api/personalStudy/kpi");
+
+        int statusCode = response.statusCode();
+
+        if (statusCode != 200) {
+            throw new RuntimeException("❌ API ответил ошибкой. Код: " + statusCode + ", тело: " + response.asString());
+        }
 
         JSONObject json = new JSONObject(response.asString()).getJSONObject("allPupilResult");
 
@@ -73,10 +86,9 @@ public class KpiTablePage {
         String expectedSubscribers = String.valueOf(json.getInt("subscribedUsersCount"));
         String expectedKpi = json.getInt("percent") + "%";
         String expectedFreezings = String.valueOf(json.getInt("freezingCount"));
-        // пример вычисления процента заморозки, если нужно отдельно
-        String expectedFreezingPercent = "103.12 %"; // можно потом считать, если логика есть
+        String expectedFreezingPercent = $("#kpi-td-freezing-percent").shouldBe(visible).getText(); // ← можно также вычислять, если нужно
 
-        // Сравнение с UI
+        // Получаем UI значения
         String actualDate = $("#kpi-td-date").shouldBe(visible).getText();
         String actualGraduates = $("#kpi-td-graduates").shouldBe(visible).getText();
         String actualSubscribers = $("#kpi-td-subscribers").shouldBe(visible).getText();
@@ -84,6 +96,7 @@ public class KpiTablePage {
         String actualFreezings = $("#kpi-td-freezings").shouldBe(visible).getText();
         String actualFreezingPercent = $("#kpi-td-freezing-percent").shouldBe(visible).getText();
 
+        // Логи сравнения
         System.out.println("📊 Сравнение KPI (UI vs API)");
         System.out.printf("Дата:             UI='%s' | API='%s'%n", actualDate, expectedDate);
         System.out.printf("Выполнили:        UI='%s' | API='%s'%n", actualGraduates, expectedGraduates);
@@ -101,7 +114,6 @@ public class KpiTablePage {
         assert actualFreezingPercent.equals(expectedFreezingPercent) : "❌ Процент заморозки не совпадает!";
 
         System.out.println("✅ Все данные KPI совпадают");
-
         return this;
     }
 
@@ -423,20 +435,148 @@ public class KpiTablePage {
         return this;
     }
 
-    @Step("Вводим дату для модуля ЕНТ: {date}")
-    public KpiTablePage enterDateForUnt(String date) {
+    @Step("Вводим дату для модуля {context}: {date}")
+    public KpiTablePage enterDate(String date, String context) {
         try {
             dateInput.shouldBe(visible, Duration.ofSeconds(10)).click();
             sleep(300);
             dateInput.setValue(date);
-            sleep(500); // имитация паузы перед нажатием
+            sleep(500);
             dateInput.pressEnter();
-            sleep(3000); // даём время на загрузку таблицы
+            sleep(3000);
         } catch (Exception e) {
-            throw new RuntimeException("❌ Не удалось ввести дату (ЕНТ): " + e.getMessage());
+            throw new RuntimeException("❌ Не удалось ввести дату для модуля '" + context + "': " + e.getMessage());
         }
         return this;
     }
+
+
+    @Step("Переходим в модуль 'Подряд не выполняли KPI'")
+    public KpiTablePage clickNotCompletedInRow() {
+        notComplitedInRow.shouldBe(visible, Duration.ofSeconds(10)).click();
+        sleep(2000);
+        return this;
+    }
+
+    @Step("Нажимаем кнопку '10-15 дней подряд'")
+    public KpiTablePage clickTenFifteenDays() {
+        tenFifteen.shouldBe(visible, Duration.ofSeconds(10)).click();
+        sleep(2000);
+        return this;
+    }
+
+    @Step("Нажимаем кнопку '15+ дней подряд'")
+    public KpiTablePage clickTenFifteenPlusDays() {
+        fifteenPlus.shouldBe(visible, Duration.ofSeconds(10)).click();
+        sleep(2000);
+        return this;
+    }
+
+
+    @Step("Проверяем данные подряд не выполнивших: Выполнили={expectedExecuted}, Не выполнили={expectedUnexecuted}, KPI={expectedPercent}")
+    public KpiTablePage verifyConsecutiveUnexecutedData(int expectedExecuted, int expectedUnexecuted, String expectedPercent, int expectedTotal) {
+        try {
+            // Основные KPI значения
+            String actualExecuted = $("#executed-label-0").shouldBe(visible).getText();
+            String actualUnexecuted = $("#unexecuted-label-0").shouldBe(visible).getText();
+            String actualPercent = $("#percent-label-0").shouldBe(visible).getText();
+
+            System.out.printf("🔍 Выполнили: ожидалось=%s, факт=%s%n", expectedExecuted, actualExecuted);
+            System.out.printf("🔍 Не выполнили: ожидалось=%s, факт=%s%n", expectedUnexecuted, actualUnexecuted);
+            System.out.printf("🔍 KPI: ожидалось=%s, факт=%s%n", expectedPercent, actualPercent);
+
+            assert actualExecuted.equals(String.valueOf(expectedExecuted)) : "❌ Выполнивших не совпадает!";
+            assert actualUnexecuted.equals(String.valueOf(expectedUnexecuted)) : "❌ Не выполнивших не совпадает!";
+            assert actualPercent.equals(expectedPercent) : "❌ KPI не совпадает!";
+
+            // Проверка таблицы учеников
+            for (int i = 0; i < expectedTotal; i++) {
+                String userId = "td-userid-0-" + i;
+                String unexecutedId = "td-unexecuted-qty-0-" + i;
+                String freezeId = "freezing-self-no-0-" + i;
+
+                $("#" + userId).shouldBe(visible);
+                String qtyStr = $("#" + unexecutedId).shouldBe(visible).getText();
+                int qty = Integer.parseInt(qtyStr.trim());
+
+                assert qty <= 15 : "❌ Ученик #" + i + " имеет подряд не выполнено > 15: " + qty;
+                $("#" + freezeId).shouldBe(visible);
+            }
+
+            // Проверка количества finished и not-finished
+            ElementsCollection notFinished = $$("[id^='not-finished-label-0-']");
+            ElementsCollection finished = $$("[id^='finished-label-0-']");
+
+            System.out.println("📋 not-finished count: " + notFinished.size());
+            System.out.println("📋 finished count: " + finished.size());
+
+            assert notFinished.size() == (expectedTotal - expectedExecuted) : "❌ Неверное кол-во not-finished!";
+            assert finished.size() == expectedExecuted : "❌ Неверное кол-во finished!";
+
+            System.out.println("✅ Проверка подряд не выполнивших завершена успешно");
+
+        } catch (Exception e) {
+            throw new RuntimeException("❌ Ошибка при проверке подряд не выполнивших: " + e.getMessage());
+        }
+
+        return this;
+    }
+
+    @Step("Проверяем данные подряд не выполнивших 15+ дней: Выполнили={expectedExecuted}, Не выполнили={expectedUnexecuted}, KPI={expectedPercent}")
+    public KpiTablePage verifyConsecutiveUnexecutedData15Plus(int expectedExecuted, int expectedUnexecuted, String expectedPercent, int expectedTotal) {
+        try {
+            // Основные KPI значения
+            String actualExecuted = $("#executed-label-0").shouldBe(visible).getText();
+            String actualUnexecuted = $("#unexecuted-label-0").shouldBe(visible).getText();
+            String actualPercent = $("#percent-label-0").shouldBe(visible).getText();
+
+            System.out.printf("🔍 Выполнили: ожидалось=%s, факт=%s%n", expectedExecuted, actualExecuted);
+            System.out.printf("🔍 Не выполнили: ожидалось=%s, факт=%s%n", expectedUnexecuted, actualUnexecuted);
+            System.out.printf("🔍 KPI: ожидалось=%s, факт=%s%n", expectedPercent, actualPercent);
+
+            assert actualExecuted.equals(String.valueOf(expectedExecuted)) : "❌ Выполнивших не совпадает!";
+            assert actualUnexecuted.equals(String.valueOf(expectedUnexecuted)) : "❌ Не выполнивших не совпадает!";
+            assert actualPercent.equals(expectedPercent) : "❌ KPI не совпадает!";
+
+            // Проверка таблицы учеников
+            for (int i = 0; i < expectedTotal; i++) {
+                String userId = "td-userid-0-" + i;
+                String unexecutedId = "td-unexecuted-qty-0-" + i;
+                String freezeId = "freezing-self-no-0-" + i;
+
+                $("#" + userId).shouldBe(visible);
+                String qtyStr = $("#" + unexecutedId).shouldBe(visible).getText();
+                int qty = Integer.parseInt(qtyStr.trim());
+
+                assert qty > 15 : "❌ Ученик #" + i + " имеет подряд не выполнено ≤ 15: " + qty;
+                $("#" + freezeId).shouldBe(visible);
+            }
+
+            // Проверка количества finished и not-finished
+            ElementsCollection notFinished = $$("[id^='not-finished-label-0-']");
+            ElementsCollection finished = $$("[id^='finished-label-0-']");
+
+            System.out.println("📋 not-finished count: " + notFinished.size());
+            System.out.println("📋 finished count: " + finished.size());
+
+            assert notFinished.size() == (expectedTotal - expectedExecuted) : "❌ Неверное кол-во not-finished!";
+            assert finished.size() == expectedExecuted : "❌ Неверное кол-во finished!";
+
+            System.out.println("✅ Проверка подряд не выполнивших (15+ дней) завершена успешно");
+
+        } catch (Exception e) {
+            throw new RuntimeException("❌ Ошибка при проверке подряд не выполнивших (15+): " + e.getMessage());
+        }
+
+        return this;
+    }
+
+
+
+
+
+
+
 
 
 }
