@@ -1,17 +1,20 @@
 package pages;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import org.json.JSONObject;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.json.JSONObject;
+import testData.TokenProvider;
 
 
 public class KpiTablePage {
@@ -49,15 +52,13 @@ public class KpiTablePage {
         return parts[2] + "-" + parts[1] + "-" + parts[0];
     }
 
-    private static final String BEARER_TOKEN = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImV4cCI6MTc0OTgwMTE0NywiaWF0IjoxNzQ5NzE0NzQ3LCJpc3MiOiJNYXRoRWR1Y2F0b3JJc3N1ZXJJZCIsImp0aSI6Ijg2Y2QyYjQyLTNkZDAtNDgxMC1iNmQ3LWEzMGMxYWUwMTdiZCIsIm5iZiI6MTc0OTcxNDc0Niwic3ViIjoiMjAwOTY2MiIsInR5cCI6ImFjY2VzcyIsInVzZXJfdG9rZW5fdHlwZSI6InB1cGlsIn0.N3A2U-JuU8G_4jJpxtQ4cYTrSF68VdZEw2sQTVkzbEXkxdBprDW5xcvEcsc7MFAtnLKdhrZgLcCFE-PoZedryA";
-
     @Step("Сравниваем KPI с API: дата={date}, компания={company}")
-    public void verifyKpiMatchesApi(String date, String company) {
+    public KpiTablePage verifyKpiMatchesApi(String date, String company) {
         String apiDate = convertToApiDateFormat(date);
 
         Response response = RestAssured
                 .given()
-                .header("Authorization", "Bearer " + BEARER_TOKEN)
+                .header("Authorization", "Bearer " + TokenProvider.getBearerToken())
                 .queryParam("date", apiDate)
                 .queryParam("company", company)
                 .when()
@@ -104,6 +105,7 @@ public class KpiTablePage {
         assert actualFreezingPercent.equals(expectedFreezingPercent) : "❌ Процент заморозки не совпадает!";
 
         System.out.println("✅ Все данные KPI совпадают");
+        return this;
     }
 
     private String formatToUiDate(String apiDate) {
@@ -195,21 +197,34 @@ public class KpiTablePage {
 
     // Хелпер для преобразования "04" → "April"
     private String getMonthName(String mm) {
-        return switch (mm) {
-            case "01" -> "қаңтар";
-            case "02" -> "ақпан";
-            case "03" -> "наурыз";
-            case "04" -> "сәуір";
-            case "05" -> "мамыр";
-            case "06" -> "маусым";
-            case "07" -> "шілде";
-            case "08" -> "тамыз";
-            case "09" -> "қыркүйек";
-            case "10" -> "қазан";
-            case "11" -> "қараша";
-            case "12" -> "желтоқсан";
-            default -> throw new IllegalArgumentException("Месяц не распознан: " + mm);
-        };
+        switch (mm) {
+            case "01":
+                return "қаңтар";
+            case "02":
+                return "ақпан";
+            case "03":
+                return "наурыз";
+            case "04":
+                return "сәуір";
+            case "05":
+                return "мамыр";
+            case "06":
+                return "маусым";
+            case "07":
+                return "шілде";
+            case "08":
+                return "тамыз";
+            case "09":
+                return "қыркүйек";
+            case "10":
+                return "қазан";
+            case "11":
+                return "қараша";
+            case "12":
+                return "желтоқсан";
+            default:
+                throw new IllegalArgumentException("Месяц не распознан: " + mm);
+        }
     }
 
 
@@ -303,7 +318,7 @@ public class KpiTablePage {
 
 
     @Step("Проверяем данные в модуле 'Новые ученики'")
-    public void verifyNewPupilsData() {
+    public KpiTablePage verifyNewPupilsData() {
         // 1. Проверка даты по частичному совпадению
         String expectedDatePart = "01.04.2024"; // или вынести в параметр
         String dateText = $("#accordion-title-0").shouldBe(visible).getText();
@@ -355,10 +370,11 @@ public class KpiTablePage {
         assert freezeStatuses.size() >= 0 : "❌ Не найден ни один freeze-status";
 
         System.out.println("🎉 Все проверки по модулю 'Новые ученики' прошли успешно!");
+        return this;
     }
 
     @Step("Проверяем данные в модуле 'Ученики ЕНТ'")
-    public void verifyUntPupilsData() {
+    public KpiTablePage verifyUntPupilsData() {
         // 1. Проверка наличия учеников по коду
         int pupilCount = 0;
         for (int i = 0; i < 10; i++) {
@@ -393,6 +409,7 @@ public class KpiTablePage {
         assert freezingStatuses.size() >= 1 : "❌ Ожидался хотя бы 1 элемент freezing-status";
 
         System.out.println("🎉 Все проверки по модулю 'Ученики ЕНТ' прошли успешно!");
+        return this;
     }
 
     @Step("Выбираем модуль Ученики ЕНТ")
@@ -448,7 +465,7 @@ public class KpiTablePage {
 
 
     @Step("Проверяем данные подряд не выполнивших: Выполнили={expectedExecuted}, Не выполнили={expectedUnexecuted}, KPI={expectedPercent}")
-    public void verifyConsecutiveUnexecutedData(int expectedExecuted, int expectedUnexecuted, String expectedPercent, int expectedTotal) {
+    public KpiTablePage verifyConsecutiveUnexecutedData(int expectedExecuted, int expectedUnexecuted, String expectedPercent, int expectedTotal) {
         try {
             // Основные KPI значения
             String actualExecuted = $("#executed-label-0").shouldBe(visible).getText();
@@ -493,10 +510,11 @@ public class KpiTablePage {
             throw new RuntimeException("❌ Ошибка при проверке подряд не выполнивших: " + e.getMessage());
         }
 
+        return this;
     }
 
     @Step("Проверяем данные подряд не выполнивших 15+ дней: Выполнили={expectedExecuted}, Не выполнили={expectedUnexecuted}, KPI={expectedPercent}")
-    public void verifyConsecutiveUnexecutedData15Plus(int expectedExecuted, int expectedUnexecuted, String expectedPercent, int expectedTotal) {
+    public KpiTablePage verifyConsecutiveUnexecutedData15Plus(int expectedExecuted, int expectedUnexecuted, String expectedPercent, int expectedTotal) {
         try {
             // Основные KPI значения
             String actualExecuted = $("#executed-label-0").shouldBe(visible).getText();
@@ -541,8 +559,6 @@ public class KpiTablePage {
             throw new RuntimeException("❌ Ошибка при проверке подряд не выполнивших (15+): " + e.getMessage());
         }
 
+        return this;
     }
-
-
 }
-
