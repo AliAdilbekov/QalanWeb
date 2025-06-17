@@ -20,7 +20,7 @@ import testData.TokenProvider;
 public class KpiTablePage {
 
     private final SelenideElement
-            serviceChapter = $x("//span[text()='Сервис']"),
+            serviceChapter = $("#icon-service-dashboard"),
             kpiButton = $("#tab-section-kpi"),
             personalStudyKpi = $("#tab-kpi"),
             companyInput = $("#select-company"),
