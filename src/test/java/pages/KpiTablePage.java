@@ -570,7 +570,7 @@ public class KpiTablePage {
     @Step("Нажимаем кнопку '1-30 дней подряд'")
     public KpiTablePage clickOneThirtyDays() {
         oneThirtyDays.shouldBe(visible, Duration.ofSeconds(10)).click();
-        sleep(2000); // ждём, пока таблица обновится
+        sleep(2000);
         return this;
     }
 
@@ -578,7 +578,7 @@ public class KpiTablePage {
     public KpiTablePage clickZhukteuUntButton() {
         try {
             zhukteuUntButton.shouldBe(visible, Duration.ofSeconds(10)).click();
-            sleep(2000); // пауза на инициализацию загрузки
+            sleep(2000);
 
             // Ожидаем появление хотя бы одного ученика
             $("#pupil-code-0-0").shouldBe(visible, Duration.ofSeconds(20));
