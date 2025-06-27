@@ -28,7 +28,7 @@ public class KpiTest extends TestBase {
                 .clickNewPupils()
                 .selectKazakhLanguage()
                 .enterDateForNewPupils("01.04.2024")
-                .clickLoadButton()
+                .clickOneThirtyDays()
                 .verifyNewPupilsData();
     }
 
@@ -41,7 +41,7 @@ public class KpiTest extends TestBase {
                 .clickUntPupilsKpi()
                 .selectKazLanguage()
                 .enterDate("01.04.2024", "ЕНТ")
-                .clickLoadButton()
+                .clickZhukteuUntButton()
                 .verifyUntPupilsData();
     }
 
