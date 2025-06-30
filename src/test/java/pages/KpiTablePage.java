@@ -29,7 +29,10 @@ public class KpiTablePage {
             notComplitedInRow = $("#tab-consecutive-unexecuted-kpi-label"),
             tenFifteen = $("#btn-10-15-days"),
             fifteenPlus = $("#btn-15-plus-days"),
-            untPupilsKpi = $("#tab-ubt-kpi");
+            untPupilsKpi = $("#tab-ubt-kpi"),
+            oneThirtyDays = $x("//button[contains(text(), '1-30')]"),
+            zhukteuUntButton = $x("//button[contains(text(), 'жүктеу')]");
+
 
 
     @Step("Логинимся как сервис-пользователь: {phone}")
@@ -553,5 +556,34 @@ public class KpiTablePage {
             throw new RuntimeException("❌ Ошибка при проверке подряд не выполнивших (15+): " + e.getMessage());
         }
 
+ update-newpupils-untkpi-button
+        return this;
+
+
     }
+
+    @Step("Нажимаем кнопку '1-30 дней подряд'")
+    public KpiTablePage clickOneThirtyDays() {
+        oneThirtyDays.shouldBe(visible, Duration.ofSeconds(10)).click();
+        sleep(2000);
+        return this;
+ main
+    }
+
+    @Step("Нажимаем кнопку 'жүктеу' и ждём загрузки учеников")
+    public KpiTablePage clickZhukteuUntButton() {
+        try {
+            zhukteuUntButton.shouldBe(visible, Duration.ofSeconds(10)).click();
+            sleep(2000);
+
+            // Ожидаем появление хотя бы одного ученика
+            $("#pupil-code-0-0").shouldBe(visible, Duration.ofSeconds(20));
+        } catch (Exception e) {
+            throw new RuntimeException("❌ Не удалось дождаться загрузки после нажатия 'жүктеу': " + e.getMessage());
+        }
+        return this;
+    }
+
+
+
 }
