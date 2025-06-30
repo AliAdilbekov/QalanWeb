@@ -7,10 +7,7 @@ import com.github.javafaker.Faker;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import pages.LoginPage;
-import pages.PersonalTaskPage;
-import pages.PupilCashbackPage;
-import pages.RegistrationPage;
+import pages.*;
 
 
 public class TestBase {
@@ -19,6 +16,7 @@ public class TestBase {
     protected RegistrationPage registrationPage = new RegistrationPage();
     protected PersonalTaskPage personalTaskPage = new PersonalTaskPage();
     protected PupilCashbackPage pupilCashbackPage = new PupilCashbackPage();
+    protected KpiTablePage kpiTablePage = new KpiTablePage();
 
     @BeforeEach
     public void beforeEach() {

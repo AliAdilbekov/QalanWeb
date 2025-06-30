@@ -1,15 +1,13 @@
 package tests;
 
 import org.junit.jupiter.api.Test;
-import pages.KpiTablePage;
 import testData.TestBase;
 
 public class KpiTest extends TestBase {
 
     @Test
     void testPersonalStudyKpi() {
-        new KpiTablePage()
-                .loginAsService("7000000000", "12345678", "test sbb")
+        kpiTablePage.loginAsService("7000000000", "12345678", "test sbb")
                 .clickServiceChapter()
                 .clickKpiButton()
                 .clickPersonalStudyKpi()
@@ -21,8 +19,7 @@ public class KpiTest extends TestBase {
 
     @Test
     void testNewPupilsChapter() {
-        new KpiTablePage()
-                .loginAsService("7000000000", "12345678", "test sbb")
+        kpiTablePage.loginAsService("7000000000", "12345678", "test sbb")
                 .clickServiceChapter()
                 .clickKpiButton()
                 .clickNewPupils()
@@ -34,8 +31,7 @@ public class KpiTest extends TestBase {
 
     @Test
     void testUntPupilsKpi() {
-        new KpiTablePage()
-                .loginAsService("7000000000", "12345678", "test sbb")
+        kpiTablePage.loginAsService("7000000000", "12345678", "test sbb")
                 .clickServiceChapter()
                 .clickKpiButton()
                 .clickUntPupilsKpi()
@@ -47,8 +43,7 @@ public class KpiTest extends TestBase {
 
     @Test
     void testConsecutiveUnexecuted10to15Days() {
-        new KpiTablePage()
-                .loginAsService("7000000000", "12345678", "test sbb")
+        kpiTablePage.loginAsService("7000000000", "12345678", "test sbb")
                 .clickServiceChapter()
                 .clickKpiButton()
                 .clickNotCompletedInRow()
@@ -65,8 +60,7 @@ public class KpiTest extends TestBase {
 
     @Test
     void testConsecutiveUnexecuted15PlusDays() {
-        new KpiTablePage()
-                .loginAsService("7000000000", "12345678", "test sbb")
+        kpiTablePage.loginAsService("7000000000", "12345678", "test sbb")
                 .clickServiceChapter()
                 .clickKpiButton()
                 .clickNotCompletedInRow()
