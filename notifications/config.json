@@ -1,0 +1,18 @@
+{
+  "base": {
+    "project": "${JOB_BASE_NAME}",
+    "environment": "Test env",
+    "comment": "@tshodorov",
+    "reportLink": "${BUILD_URL}",
+    "language": "ru",
+    "messenger": "telegram",
+    "allureFolder": "build/allure-report/",
+    "enableChart": true
+  },
+  "telegram": {
+    "token": "7855951281:AAG5WG2QpNlapd0mmrob7F8ZOJxi5l51Mxc",
+    "chat": "-1002372063611",
+    "templatePath": "/templates/telegram.ftl",
+    "replyTo": ""
+  }
+}
