@@ -556,10 +556,6 @@ public class KpiTablePage {
             throw new RuntimeException("❌ Ошибка при проверке подряд не выполнивших (15+): " + e.getMessage());
         }
 
- update-newpupils-untkpi-button
-        return this;
-
-
     }
 
     @Step("Нажимаем кнопку '1-30 дней подряд'")
@@ -567,7 +563,6 @@ public class KpiTablePage {
         oneThirtyDays.shouldBe(visible, Duration.ofSeconds(10)).click();
         sleep(2000);
         return this;
- main
     }
 
     @Step("Нажимаем кнопку 'жүктеу' и ждём загрузки учеников")
