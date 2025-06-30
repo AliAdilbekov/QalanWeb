@@ -17,6 +17,7 @@ public class TestBase {
     protected PersonalTaskPage personalTaskPage = new PersonalTaskPage();
     protected PupilCashbackPage pupilCashbackPage = new PupilCashbackPage();
     protected KpiTablePage kpiTablePage = new KpiTablePage();
+    protected SbbPage sbbPage = new SbbPage();
 
     @BeforeEach
     public void beforeEach() {
