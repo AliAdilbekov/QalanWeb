@@ -34,7 +34,6 @@ public class KpiTablePage {
             zhukteuUntButton = $x("//button[contains(text(), 'жүктеу')]");
 
 
-
     @Step("Логинимся как сервис-пользователь: {phone}")
     public KpiTablePage loginAsService(String phone, String password, String expectedUsername) {
         new LoginPage()
@@ -578,7 +577,6 @@ public class KpiTablePage {
         }
         return this;
     }
-
 
 
 }
