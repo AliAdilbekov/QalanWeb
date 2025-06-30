@@ -1,10 +1,15 @@
 package tests;
 
 import com.codeborne.selenide.SelenideDriver;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import pages.ChatPage;
 import testData.DriverFactory;
 
+@Tag("chat")
+@Execution(ExecutionMode.SAME_THREAD)
 public class ChatTest {
 
     // Два SelenideDriver из DriverFactory

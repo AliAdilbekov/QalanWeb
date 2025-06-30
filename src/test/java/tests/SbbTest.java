@@ -1,9 +1,14 @@
 package tests;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import pages.KpiTablePage;
 import testData.TestBase;
 
+@Tag("kpiSbb")
+@Execution(ExecutionMode.SAME_THREAD)
 public class SbbTest extends TestBase {
 
     @Test

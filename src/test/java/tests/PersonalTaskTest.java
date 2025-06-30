@@ -1,11 +1,13 @@
 package tests;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import testData.TestBase;
 
+@Tag("personalTask")
 @Execution(ExecutionMode.SAME_THREAD)
 public class PersonalTaskTest extends TestBase {
 

@@ -1,8 +1,13 @@
 package tests;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import testData.TestBase;
 
+@Tag("kpiService")
+@Execution(ExecutionMode.SAME_THREAD)
 public class KpiTest extends TestBase {
 
     @Test

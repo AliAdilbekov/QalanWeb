@@ -1,8 +1,13 @@
 package tests;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import testData.TestBase;
 
+@Tag("getCashback")
+@Execution(ExecutionMode.SAME_THREAD)
 public class PupilCashbackTest extends TestBase {
 
     @Test
@@ -10,12 +15,13 @@ public class PupilCashbackTest extends TestBase {
         pupilCashbackPage.loginAsStudent("7058281556", "12345678", "Testcashback TESTCASHBACK")
                 .clickCashbackChapterButton()
                 .clickGetCashbackButton()
-                .clickKassa24Button() 
+                .clickKassa24Button()
                 .enterConfirmationCodeFromApi("77022659587")
                 .verifyToastError()
-                .enterCardAndPay() 
+                .enterCardAndPay()
                 .verifySuccessScreen();
     }
+
     @Test
     void testShortCodeInput() {
         pupilCashbackPage.loginAsStudent("7058281556", "12345678", "Testcashback TESTCASHBACK")
