@@ -41,4 +41,8 @@ tasks.withType(JavaCompile).configureEach {
 // Настройка тестов
 test {
     useJUnitPlatform() // Используем JUnit Platform для тестов
+    systemProperty "selenide.remote", System.getProperty("SELENIUM_REMOTE_URL")
+    systemProperty "selenide.browser", "chrome"
+    systemProperty "selenide.browserSize", "1920x1080"
+    systemProperty "allure.results.directory", "build/allure-results"
 }
