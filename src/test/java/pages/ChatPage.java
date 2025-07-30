@@ -3,6 +3,8 @@ package pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.ex.UIAssertionError;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -127,11 +129,30 @@ public class ChatPage {
         return this;
     }
 
-    @Step("Ментор: переходим в чат Через ПО3")
+    @Step("Ментор: переходим в чат через ПО3")
     public ChatPage openChatFromSessionsAsMentor() {
-        mentorSessionsButton.shouldBe(visible).click();
-        mentorChatMessageListBtn.shouldBe(visible).click();
-        messageInput.shouldBe(visible);
+        // сначала открыли список сессий
+        mentorSessionsButton
+                .shouldBe(visible, Duration.ofSeconds(5))
+                .click();
+
+        // теперь — кнопка перехода в чат
+        try {
+            mentorChatMessageListBtn
+                    .shouldBe(visible, Duration.ofSeconds(5))
+                    .click();
+        } catch (UIAssertionError e) {
+            // если кнопки нет — падаем сразу с понятным текстом
+            System.out.println("❌ Кнопка перехода в чат не найдена — нужно настроить сессию в базе для ментора");
+            throw new AssertionError(
+                    "❌ Кнопка перехода в чат не найдена — " +
+                            "нужно настроить сессию в базе для ментора", e);
+        }
+
+        // проверяем, что поле ввода реально появилось
+        messageInput
+                .shouldBe(visible, Duration.ofSeconds(5));
+
         return this;
     }
 

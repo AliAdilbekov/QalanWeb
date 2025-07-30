@@ -5,7 +5,9 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import com.github.javafaker.Faker;
 import io.qameta.allure.selenide.AllureSelenide;
+import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import pages.*;
 
@@ -18,6 +20,11 @@ public class TestBase {
     protected PupilCashbackPage pupilCashbackPage = new PupilCashbackPage();
     protected KpiTablePage kpiTablePage = new KpiTablePage();
     protected SbbPage sbbPage = new SbbPage();
+
+    @BeforeAll
+    static void globalSetUp() {
+        RestAssured.useRelaxedHTTPSValidation();
+    }
 
     @BeforeEach
     public void beforeEach() {
