@@ -5,31 +5,41 @@ import com.codeborne.selenide.SelenideDriver;
 
 public class DriverFactory {
 
-    /**
-     * Создаёт SelenideDriver для «ученика» (student) с нужными размерами/координатами.
-     */
+    private static String baseUrl() {
+        return System.getProperty("baseUrl", "https://preprod.qalan.kz"); // NEW
+    }
+    private static String remote() {
+        String r = System.getProperty("selenide.remote");                 // NEW
+        return (r != null && !r.isBlank() && !"null".equalsIgnoreCase(r)) ? r : null;
+    }
+
     public static SelenideDriver createStudentDriver() {
-        SelenideConfig studentConfig = new SelenideConfig()
+        SelenideConfig cfg = new SelenideConfig()
+                .baseUrl(baseUrl())                                       // NEW
                 .browser("chrome")
                 .browserPosition("0x0")
                 .browserSize("760x810")
-                .holdBrowserOpen(false)
-                .timeout(30000);
+                .timeout(30000)
+                .pageLoadTimeout(90000);                                  // NEW
 
-        return new SelenideDriver(studentConfig);
+        String r = remote();                                              // NEW
+        if (r != null) cfg.remote(r);                                     // NEW
+
+        return new SelenideDriver(cfg);
     }
 
-    /**
-     * Создаёт SelenideDriver для «ментора» (mentor) с другими позициями окна.
-     */
     public static SelenideDriver createMentorDriver() {
-        SelenideConfig mentorConfig = new SelenideConfig()
+        SelenideConfig cfg = new SelenideConfig()
+                .baseUrl(baseUrl())                                       // NEW
                 .browser("chrome")
                 .browserPosition("780x0")
                 .browserSize("760x810")
-                .holdBrowserOpen(false)
-                .timeout(30000);
+                .timeout(30000)
+                .pageLoadTimeout(90000);                                  // NEW
 
-        return new SelenideDriver(mentorConfig);
+        String r = remote();                                              // NEW
+        if (r != null) cfg.remote(r);                                     // NEW
+
+        return new SelenideDriver(cfg);
     }
 }

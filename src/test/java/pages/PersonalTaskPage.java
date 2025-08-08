@@ -30,7 +30,6 @@ public class PersonalTaskPage {
 
     private Integer lastDotCount = null;
     private final Random random = new Random(); // это для разной частоты ввода ответа
-    private final By dotsContainer = By.id("task-modal-dot-list");
     private final By livesContainer = By.cssSelector(".task-attempt-list");
 
 
@@ -141,12 +140,10 @@ public class PersonalTaskPage {
     @Step("Получаем ответ с API для userId = {userId}")
     private String fetchAnswerFromApi(String userId) {
         var response = given()
-                .baseUri("https://test.qalan.kz")
-                .basePath("/api/mlRequest/pupilInfo")
                 .queryParam("userId", userId)
                 .relaxedHTTPSValidation()
                 .when()
-                .get();
+                .get("/mlRequest/pupilInfo");
 
         int statusCode = response.getStatusCode();
 

@@ -62,7 +62,7 @@ public class KpiTablePage {
                 .queryParam("date", apiDate)
                 .queryParam("company", company)
                 .when()
-                .get("https://test.qalan.kz/api/personalStudy/kpi");
+                .get("/personalStudy/kpi");
 
         int statusCode = response.statusCode();
 

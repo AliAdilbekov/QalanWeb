@@ -21,7 +21,7 @@ repositories {
 // Зависимости для проекта
 dependencies {
     // Тестовые зависимости
-    testImplementation (
+    testImplementation(
             "com.codeborne:selenide:7.5.1", // Selenide для автоматизации браузера
             "org.slf4j:slf4j-simple:2.0.6", // SLF4J Simple для логирования
             "io.rest-assured:rest-assured:5.4.0", // Rest-Assured для тестирования REST API
@@ -30,7 +30,6 @@ dependencies {
             "org.junit.jupiter:junit-jupiter-api:5.11.3", // Предоставляет аннотации (например, @Test, @BeforeEach) и основные классы для написания тестов
             "org.junit.jupiter:junit-jupiter-engine:5.11.3", // Движок (рантайм) JUnit 5, который фактически запускает тесты и обрабатывает результаты.
             "io.qameta.allure:allure-selenide:2.29.0", // Интеграция Allure Report с Selenide
-            "io.rest-assured:rest-assured:5.4.0",
             "org.json:json:20240303"
     )
 }
@@ -41,8 +40,24 @@ tasks.withType(JavaCompile).configureEach {
 // Настройка тестов
 test {
     useJUnitPlatform() // Используем JUnit Platform для тестов
-    systemProperty "selenide.remote", System.getProperty("SELENIUM_REMOTE_URL")
-    systemProperty "selenide.browser", "chrome"
-    systemProperty "selenide.browserSize", "1920x1080"
+
+    // Выбираем окружение одной опцией -Penv=(test|preprod|prod)
+    def env = (project.findProperty('env') ?: 'preprod') as String
+    def urls = [
+            test   : 'https://test.qalan.kz',
+            preprod: 'https://preprod.qalan.kz',
+            prod   : 'https://qalan.kz'
+    ]
+    if (!urls.containsKey(env)) {
+        throw new GradleException("Unknown env: ${env}. Use one of: ${urls.keySet()}")
+    }
+    systemProperty "baseUrl", urls[env]
+
+    // Пробрасываем настраиваемые параметры (можно задавать через -D)
+    //systemProperty "selenide.remote", System.getProperty("SELENIUM_REMOTE_URL") // (если используете Selenoid)
+    systemProperty "browser", System.getProperty("browser", "chrome")
+    systemProperty "browserSize", System.getProperty("browserSize", "1530x810")
+    systemProperty "timeout", System.getProperty("timeout", "30000")
+    systemProperty "pageLoadTimeout", System.getProperty("pageLoadTimeout", "90000")
     systemProperty "allure.results.directory", "build/allure-results"
 }

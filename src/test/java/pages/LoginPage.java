@@ -11,8 +11,6 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class LoginPage {
 
-    private final String baseUrl = "https://test.qalan.kz";
-
     private final SelenideElement
             modal = $(By.id("add-survey-modal-body")),
             signButton = $(By.id("sign-button")),
@@ -24,7 +22,7 @@ public class LoginPage {
 
     @Step("Открываем главную страницу")
     public LoginPage openLoginPage() {
-        open(baseUrl);
+        open("/");
         return this;
     }
 

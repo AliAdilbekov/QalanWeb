@@ -76,23 +76,18 @@ public class PupilCashbackPage {
         return this;
     }
 
-
-
-
     @Step("Получаем и вводим SMS‑код")
     public PupilCashbackPage enterConfirmationCodeFromApi(String phoneNumber) {
         sleep(15_000);
 
         String code =
                 given()
-                        .baseUri("https://test.qalan.kz")                 // ← ① сервер
-                        .basePath("/api/confirmationCodeByPhoneNumber")   // ← ② путь
                         .relaxedHTTPSValidation()                         // если сертификат self‑signed
                         .queryParam("phoneNumber", phoneNumber)
                         .queryParam("type", 30)
                         .header("Authorization", "Bearer " + TokenProvider.getBearerToken())
                         .when()
-                        .get()
+                        .get("/confirmationCodeByPhoneNumber")
                         .then()
                         .statusCode(200)
                         .extract()
@@ -128,6 +123,7 @@ public class PupilCashbackPage {
 
         System.out.println("✅ Успешная выплата подтверждена");
     }
+
     @Step("Вводим код вручную: {code}")
     public PupilCashbackPage enterCodeManually(String code) {
         confirmationInput.shouldBe(visible, Duration.ofSeconds(10)).click();
@@ -136,6 +132,7 @@ public class PupilCashbackPage {
         sleep(2000);
         return this;
     }
+
     @Step("Ожидаем, что появится toast с ошибкой: 'Растау коды табылмады'")
     public PupilCashbackPage expectToastErrorMustAppear() {
         sleep(2000); // подождать появления

@@ -14,7 +14,6 @@ import static com.codeborne.selenide.Selenide.$;
 public class RegistrationPage {
 
     // 🔗 URL сайта
-    private static final String BASE_URL = "https://test.qalan.kz";
 
     private final SelenideElement modal = $(By.id("add-survey-modal-body"));
 
@@ -32,7 +31,7 @@ public class RegistrationPage {
 
     @Step("Открываем сайт и переходим к форме регистрации")
     public RegistrationPage openRegistrationPage() {
-        Selenide.open(BASE_URL);
+        Selenide.open("/");
         signButton.shouldBe(visible).click();
         registerSwitch.shouldBe(visible).click();
         return this;

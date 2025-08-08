@@ -3,7 +3,6 @@ package pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.ex.ElementNotFound;
 import com.codeborne.selenide.ex.UIAssertionError;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
@@ -21,7 +20,6 @@ public class ChatPage {
     private final SelenideDriver driver;
 
     // Данные сайта / логины
-    private static final String BASE_URL = "https://test.qalan.kz";
     private static final String STUDENT_PHONE = "7083544313";
     private static final String STUDENT_PASSWORD = "12345678";
     private static final String MENTOR_PHONE = "7022738232";
@@ -64,21 +62,19 @@ public class ChatPage {
     // Авторизация
     // --------------------------------------
     @Step("Открываем сайт и нажимаем 'Войти'")
-    private ChatPage openAndClickSign() {
-        driver.open(BASE_URL);
+    private void openAndClickSign() {
+        driver.open("/");
         signButton.shouldBe(visible).click();
-        return this;
     }
 
     @Step("Вводим телефон/пароль, нажимаем 'Вход'")
-    private ChatPage doLogin(String phone, String password) {
+    private void doLogin(String phone, String password) {
         phoneInput.shouldBe(visible).setValue(phone);
         passwordInput.shouldBe(visible).setValue(password);
         submitButton.shouldBe(enabled).click();
         // Логирование ФИО
         titleText.shouldBe(visible);
         System.out.println("Авторизовался: " + titleText.getText());
-        return this;
     }
 
     @Step("Логин как Ученик")

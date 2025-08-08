@@ -24,17 +24,25 @@ public class TestBase {
     @BeforeAll
     static void globalSetUp() {
         RestAssured.useRelaxedHTTPSValidation();
+
+        Configuration.baseUrl = System.getProperty("baseUrl", "https://preprod.qalan.kz");
+        RestAssured.baseURI = Configuration.baseUrl;
+        RestAssured.basePath = "/api";
+        Configuration.browser = System.getProperty("browser", "chrome");
+        Configuration.browserSize = System.getProperty("browserSize", "1530x810");
+        Configuration.timeout = Long.parseLong(System.getProperty("timeout", "30000"));
+        Configuration.pageLoadTimeout = Long.parseLong(System.getProperty("pageLoadTimeout", "90000"));
+        //Configuration.remote = System.getProperty("selenide.remote");
     }
 
     @BeforeEach
     public void beforeEach() {
         long start = System.currentTimeMillis();
 
-        Configuration.browser = "chrome";
-        Configuration.browserSize = "1530x810";
-        Configuration.timeout = 30000; // Ждать элементы до 30 сек
-        Configuration.pageLoadTimeout = 90000; // Ждать загрузку страницы
-        SelenideLogger.addListener("allure", new AllureSelenide());
+        SelenideLogger.addListener("allure", new AllureSelenide()
+                .savePageSource(true)
+                .screenshots(true)
+        );
 
         long end = System.currentTimeMillis();
         System.out.println("⏳ Время инициализации: " + (end - start) + " мс");
