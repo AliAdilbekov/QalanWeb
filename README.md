@@ -1,7 +1,7 @@
 # Qalan UI Tests
 
 Автоматизированные **UI-тесты** для платформы **Qalan**.  
-Стек: **Java 17 · Gradle 8 · JUnit 5 · Selenide 7 · Rest-Assured · Allure Reports · Telegram**  
+Стек: **Java 21 · Gradle 8.11.1 · JUnit 5 · Selenide 7.5.1 · Rest-Assured · Allure Reports · Telegram**  
 CI/CD: **GitLab CI · Docker · GitLab Runner · Selenoid/Selenium Grid**
 
 ---
