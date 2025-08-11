@@ -7,7 +7,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import testData.TestBase;
 
-@Tag("authorization")
+@Tag("auth")
 @Execution(ExecutionMode.SAME_THREAD)
 public class LoginTest extends TestBase {
 

@@ -61,3 +61,34 @@ test {
     systemProperty "pageLoadTimeout", System.getProperty("pageLoadTimeout", "90000")
     systemProperty "allure.results.directory", "build/allure-results"
 }
+
+
+   // Отдельные таски по тегам
+
+def registerTagTask = { String taskName, String tag ->
+    tasks.register(taskName, Test) {
+        useJUnitPlatform { includeTags tag }
+        systemProperties System.getProperties()
+        def env = (project.findProperty('env') ?: 'preprod') as String
+        def urls = [
+                test   : 'https://test.qalan.kz',
+                preprod: 'https://preprod.qalan.kz',
+                prod   : 'https://qalan.kz'
+        ]
+        systemProperty "baseUrl", urls[env]
+        //systemProperty "selenide.remote", System.getProperty("SELENIUM_REMOTE_URL")
+        systemProperty "browser", System.getProperty("browser", "chrome")
+        systemProperty "browserSize", System.getProperty("browserSize", "1530x810")
+        systemProperty "timeout", System.getProperty("timeout", "30000")
+        systemProperty "pageLoadTimeout", System.getProperty("pageLoadTimeout", "90000")
+        systemProperty "allure.results.directory", "build/allure-results"
+    }
+}
+
+registerTagTask('authTest', 'auth')
+registerTagTask('registrationTest', 'registration')
+registerTagTask('getCashbackTest', 'getCashback')
+registerTagTask('personalTaskTest', 'personalTask')
+registerTagTask('chatTest', 'chat')
+registerTagTask('kpiServiceTest', 'kpiService')
+registerTagTask('kpiSbbTest', 'kpiSbb')
