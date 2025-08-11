@@ -1,6 +1,7 @@
 package tests;
 
 import com.codeborne.selenide.SelenideDriver;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -56,6 +57,7 @@ public class ChatTest {
     }
 
     @Test
+    @Disabled("Нужно через БД открыть сессию")
     void ChatFlowPersonalStudy3() {
         // --- Ученик ---
         ChatPage studentChat = new ChatPage(studentDriver)
