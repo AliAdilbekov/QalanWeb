@@ -21,36 +21,57 @@ CI/CD: **GitLab CI · Docker · GitLab Runner · Selenoid/Selenium Grid**
 
 ## 2) Технологии (кратко и зачем)
 
-| Инструмент | Роль |
-|---|---|
-| **Java 17** | Язык тестов (LTS, стабильность и скорость). |
-| **Gradle 8** | Сборка/запуск тестов, управление зависимостями, переключение окружений `-Penv`. |
-| **JUnit 5** | Фреймворк тестирования: `@Test`, `@BeforeEach`, фильтр по `@Tag`. |
-| **Selenide 7** | Упрощённая работа с Selenium: умные ожидания, короткие селекторы, авто-скриншоты/логи. |
-| **Rest-Assured** | HTTP-клиент для API внутри UI-тестов (получить токен, сверить данные с UI). |
-| **Allure** | Отчёты со скриншотами, шагами, вложениями и историей. |
+| Инструмент                      | Роль |
+|---------------------------------|---|
+| **Java 21**                     | Язык тестов (LTS, стабильность и скорость). |
+| **Gradle 8**                    | Сборка/запуск тестов, управление зависимостями, переключение окружений `-Penv`. |
+| **JUnit 5**                     | Фреймворк тестирования: `@Test`, `@BeforeEach`, фильтр по `@Tag`. |
+| **Selenide 7**                  | Упрощённая работа с Selenium: умные ожидания, короткие селекторы, авто-скриншоты/логи. |
+| **Rest-Assured**                | HTTP-клиент для API внутри UI-тестов (получить токен, сверить данные с UI). |
+| **Allure**                      | Отчёты со скриншотами, шагами, вложениями и историей. |
 | **GitLab CI + Docker + Runner** | Прогоны в пайплайне, хранение артефактов, отправка уведомлений. |
-| **Selenoid / Selenium Grid** | Удалённые браузеры в контейнерах для CI. |
-| **Telegram Bot API** | Уведомления о результатах прогонов. |
+| **Selenoid / Selenium Grid**    | Удалённые браузеры в контейнерах для CI. |
+| **Telegram Bot API**            | Уведомления о результатах прогонов. |
 
 ---
 
 ## 3) Структура проекта
-
+```
 QalanWeb/
-├─ build.gradle # Gradle-конфиг (env-переключатель, теги-наборы, Allure)
-├─ gradlew / gradlew.bat # Gradle Wrapper
-├─ notifications/ # (опционально) Allure Notifications jar + конфиг
-│ ├─ allure-notifications-4.9.0.jar
-│ └─ config.json
-├─ src/
-│ └─ test/
-│ ├─ java/
-│ │ ├─ pages/ # Page Object'ы: LoginPage, ChatPage, KpiTablePage, ...
-│ │ ├─ testData/ # TestBase, DriverFactory, TokenProvider и прочие хелперы
-│ │ └─ tests/ # Тесты: LoginTest, ChatTest, KpiTest, ...
-│ └─ resources/ # Ресурсы (если нужны)
-└─ build/ # Артефакты сборки (allure-results, allure-report, html-отчёты JUnit)
+├── build.gradle                 # Gradle-конфиг (env-переключатель, теги-наборы, Allure)
+├── gradlew                      # Gradle Wrapper (Linux/Mac)
+├── gradlew.bat                  # Gradle Wrapper (Windows)
+├── notifications/               # (опционально) Allure Notifications jar + конфиг
+│   ├── allure-notifications-4.9.0.jar
+│   └── config.json
+├── src/
+│   └── test/
+│       ├── java/
+│       │   ├── pages/           # Page Object'ы
+│       │   │   ├── ChatPage.java
+│       │   │   ├── KpiTablePage.java
+│       │   │   ├── LoginPage.java
+│       │   │   ├── PersonalTaskPage.java
+│       │   │   ├── PupilCashbackPage.java
+│       │   │   ├── RegistrationPage.java
+│       │   │   └── SbbPage.java
+│       │   ├── testData/        # Базы/хелперы
+│       │   │   ├── DriverFactory.java
+│       │   │   ├── TestBase.java
+│       │   │   └── TokenProvider.java
+│       │   └── tests/           # Наборы тестов
+│       │       ├── ChatTest.java
+│       │       ├── KpiTest.java
+│       │       ├── LoginTest.java
+│       │       ├── PersonalTaskTest.java
+│       │       ├── PupilCashbackTest.java
+│       │       ├── RegistrationTest.java
+│       │       └── SbbTest.java
+│       └── resources/           # Ресурсы (если нужны)
+└── build/                       # Артефакты сборки
+├── allure-results/
+└── allure-report/
+```
 
 ---
 
