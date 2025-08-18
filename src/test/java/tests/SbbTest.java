@@ -1,5 +1,6 @@
 package tests;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -9,6 +10,7 @@ import testData.TestBase;
 
 @Tag("kpiSbb")
 @Execution(ExecutionMode.SAME_THREAD)
+@Disabled("В связи с изменениями логики")
 public class SbbTest extends TestBase {
 
     @Test

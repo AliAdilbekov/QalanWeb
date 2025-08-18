@@ -62,9 +62,7 @@ test {
     systemProperty "allure.results.directory", "build/allure-results"
 }
 
-
    // Отдельные таски по тегам
-
 def registerTagTask = { String taskName, String tag ->
     tasks.register(taskName, Test) {
         useJUnitPlatform { includeTags tag }
