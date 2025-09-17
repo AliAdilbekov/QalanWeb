@@ -1,5 +1,6 @@
 package pages;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
@@ -13,7 +14,6 @@ import java.util.Random;
 import java.util.regex.Pattern;
 
 import static com.codeborne.selenide.Condition.*;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class ChatPage {
 
@@ -22,10 +22,10 @@ public class ChatPage {
     // Данные сайта / логины
     private static final String STUDENT_PHONE = "7083544313";
     private static final String STUDENT_PASSWORD = "12345678";
-    private static final String MENTOR_PHONE = "7022738232";
+    private static final String MENTOR_PHONE  = "7022738232";
     private static final String MENTOR_PASSWORD = "87654321";
 
-    // Элементы
+    // Локаторы
     private final SelenideElement modal;
     private final SelenideElement signButton;
     private final SelenideElement phoneInput;
@@ -36,26 +36,24 @@ public class ChatPage {
     private final SelenideElement mentorSessionsButton;
     private final SelenideElement mentorChatMessageListBtn;
     private final SelenideElement messageInput;
-    private final SelenideElement refreshButton;
 
-    // Список сообщений
     private final By messageItems = By.cssSelector("div.message-item");
 
     public ChatPage(SelenideDriver driver) {
         this.driver = driver;
 
-        // Инициализация элементов через driver
-        modal = driver.$(By.id("add-survey-modal-body"));
-        signButton = driver.$(By.id("sign-button"));
-        phoneInput = modal.$(By.id("phone-input-id"));
-        passwordInput = modal.$(By.id("password-input"));
-        submitButton = driver.$(By.id("login-button"));
-        titleText = driver.$(By.id("user-fullname-container"));
-        studentChatButton = driver.$(By.id("mobile-chat-button"));
-        mentorSessionsButton = driver.$(By.id("group-button-mentor-sessions"));
+        // ИНИЦИАЛИЗАЦИЯ ТОЛЬКО ЧЕРЕЗ driver
+        modal                  = driver.$(By.id("add-survey-modal-body"));
+        signButton             = driver.$(By.id("sign-button"));
+        phoneInput             = modal.$(By.id("phone-input-id"));
+        passwordInput          = modal.$(By.id("password-input"));
+        submitButton           = driver.$(By.id("login-button"));
+        titleText              = driver.$(By.id("user-fullname-container"));
+        studentChatButton      = driver.$(By.id("mobile-chat-button"));
+        mentorSessionsButton   = driver.$(By.id("group-button-mentor-sessions"));
         mentorChatMessageListBtn = driver.$(By.id("chat-message-list-button"));
-        messageInput = driver.$(By.id("message-input-box"));
-        refreshButton = driver.$(By.id("load-message-history-button"));
+        messageInput           = driver.$(By.id("chat-message-input"));
+        // refreshButton НЕ КЭШИРУЕМ — ищем по месту в методе
     }
 
     // --------------------------------------
@@ -63,7 +61,7 @@ public class ChatPage {
     // --------------------------------------
     @Step("Открываем сайт и нажимаем 'Войти'")
     private void openAndClickSign() {
-        driver.open("/");
+        driver.open("/"); // только через driver
         signButton.shouldBe(visible).click();
     }
 
@@ -72,7 +70,7 @@ public class ChatPage {
         phoneInput.shouldBe(visible).setValue(phone);
         passwordInput.shouldBe(visible).setValue(password);
         submitButton.shouldBe(enabled).click();
-        // Логирование ФИО
+
         titleText.shouldBe(visible);
         System.out.println("Авторизовался: " + titleText.getText());
     }
@@ -103,52 +101,36 @@ public class ChatPage {
 
     @Step("Ментор: переходим в чат Через ПО2")
     public ChatPage openChatAsMentor() {
-        // 1) Ввести номер ученика в поле "search-database-input"
         driver.$(By.id("search-database-input"))
                 .shouldBe(visible)
-                .setValue("7083544313");
+                .setValue(STUDENT_PHONE);
 
-        // 2) Нажать кнопку поиска "search-database-button"
         driver.$(By.id("search-database-button"))
                 .shouldBe(visible)
                 .click();
 
-        // 3) Нажать на иконку чата "chat-message-list-button"
         driver.$(By.id("chat-message-list-button"))
                 .shouldBe(visible)
                 .click();
 
-        // Проверить, что появилось поле для ввода сообщений
         messageInput.shouldBe(visible);
-
-        // Возвращаем this для chain-стиля
         return this;
     }
 
     @Step("Ментор: переходим в чат через ПО3")
     public ChatPage openChatFromSessionsAsMentor() {
-        // сначала открыли список сессий
-        mentorSessionsButton
-                .shouldBe(visible, Duration.ofSeconds(5))
-                .click();
+        mentorSessionsButton.shouldBe(visible, Duration.ofSeconds(5)).click();
 
-        // теперь — кнопка перехода в чат
         try {
             mentorChatMessageListBtn
                     .shouldBe(visible, Duration.ofSeconds(5))
                     .click();
         } catch (UIAssertionError e) {
-            // если кнопки нет — падаем сразу с понятным текстом
             System.out.println("❌ Кнопка перехода в чат не найдена — нужно настроить сессию в базе для ментора");
-            throw new AssertionError(
-                    "❌ Кнопка перехода в чат не найдена — " +
-                            "нужно настроить сессию в базе для ментора", e);
+            throw new AssertionError("❌ Кнопка перехода в чат не найдена — нужно настроить сессию в базе для ментора", e);
         }
 
-        // проверяем, что поле ввода реально появилось
-        messageInput
-                .shouldBe(visible, Duration.ofSeconds(5));
-
+        messageInput.shouldBe(visible, Duration.ofSeconds(5));
         return this;
     }
 
@@ -164,8 +146,11 @@ public class ChatPage {
         return this;
     }
 
-    @Step("Нажимаем 'Обновить'")
+    @Step("Нажимаем 'Алдыңғы хабарламалар'")
     public ChatPage refreshChat() {
+        // Ищем кнопку каждый раз — так устойчивее
+        SelenideElement refreshButton = driver.$$(By.tagName("button"))
+                .findBy(text("Алдыңғы хабарламалар"));
         refreshButton.shouldBe(visible)
                 .shouldBe(enabled, Duration.ofSeconds(120))
                 .click();
@@ -187,9 +172,7 @@ public class ChatPage {
     @Step("Проверяем, что нет дублей: {expectedText}")
     public ChatPage checkNoDuplicateMessage(String expectedText) {
         ElementsCollection found = driver.$$(messageItems).filterBy(text(expectedText));
-        if (found.size() > 1) {
-            fail("Найден дубль: " + expectedText);
-        }
+        found.shouldHave(CollectionCondition.sizeLessThan(2));
         return this;
     }
 
@@ -211,10 +194,8 @@ public class ChatPage {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder sb = new StringBuilder();
         Random rnd = new Random();
-        for (int i = 0; i < 6; i++) {
-            sb.append(chars.charAt(rnd.nextInt(chars.length())));
-        }
-        return prefix + sb.toString();
+        for (int i = 0; i < 6; i++) sb.append(chars.charAt(rnd.nextInt(chars.length())));
+        return prefix + sb;
     }
 
     // --------------------------------------
@@ -222,7 +203,7 @@ public class ChatPage {
     // --------------------------------------
     @Step("Закрываем браузер (SelenideDriver)")
     public ChatPage closeDriver() {
-        driver.close();  // или driver.getWebDriver().quit();
+        driver.close(); // закрываем именно этот driver, а не глобальный
         return this;
     }
 }
