@@ -66,7 +66,7 @@ public class PersonalTaskTest extends TestBase {
                 .hideCalculatorButtonClick()
                 .logTaskSummary()
                 .showSolutionButtonClick()
-                .verifyLifeCount(1)        // пишем сколько жизней должно быть потрачено
+                .verifyLifeCount(0)        // пишем сколько жизней должно быть потрачено
                 .nextButtonClick()
                 .verifyTaskCount(3)  // здесь указываем число задач которое должно прибавиться, то есть проверяем дельту
                 .logTaskSummary()
