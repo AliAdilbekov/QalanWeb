@@ -18,13 +18,13 @@ public class PersonalTaskPage {
     private final SelenideElement
             personalStudyStartButton = $(By.id("start-new-table-button")),
             personalStudyContinueButton = $(By.id("continue-last-table-button")),
-            nextButton = $(By.id("next-task-button")),
+            nextButton = $(By.id("task-modal-next-btn")),
             answerField = $x("//span[contains(@class,'mq-textarea')]/textarea"),
             answerContainer = $x("//span[contains(@class,'mq-editable-field')]"),
-            checkAnswerButton = $(By.id("check-answer-button")),
-            showSolutionButton = $(By.id("show-solution-button")),
+            checkAnswerButton = $(By.id("task-modal-check-answer-btn")),
+            showSolutionButton = $(By.id("task-modal-solution-btn")),
             hideCalculatorButton = $(By.id("calculator-icon")),
-            videoExplanationButton = $(By.id("video-explanation-button")),
+            videoExplanationButton = $(By.id("task-modal-video-explanation-btn")),
             dotList = $(By.id("task-modal-dot-list")),
             congratulationsToast = $x("//div[contains(@class, 'Toastify__toast-body') and contains(.,'Құттықтаймыз')]");
 
